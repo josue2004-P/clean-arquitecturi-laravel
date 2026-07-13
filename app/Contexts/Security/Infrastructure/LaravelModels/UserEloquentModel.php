@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Contexts\Security\Infrastructure\LaravelModels;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
+class UserEloquentModel extends Authenticatable
+{
+    use HasFactory, Notifiable;
+
+    protected $table = 'users';
+
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'is_activo',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'is_activo' => 'boolean',
+        ];
+    }
+
+    public function perfiles(): BelongsToMany
+    {
+        return $this->belongsToMany(PerfilEloquentModel::class, 'perfil_user', 'user_id', 'perfil_id')
+                    ->withTimestamps(); 
+    }
+
+    public function checkPerfil($perfilNombre)
+    {
+        return $this->perfiles()->where('nombre', $perfilNombre)->exists();
+    }
+}

@@ -1,0 +1,163 @@
+@props([
+    'search' => null,
+    'perPage' => null,
+    'exportPdf' => null,
+    'exportExcel' => null,
+    'createRoute' => null,
+    'title' => 'Registros'
+])
+
+<div class="rounded-3xl border border-gray-200 bg-white shadow-sm transition-all duration-300 dark:border-gray-800 dark:bg-gray-900/50">
+    
+    {{-- BARRA SUPERIOR PREMIUM --}}
+    <div class="p-6">
+        <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            
+            <div class="flex flex-col gap-5 sm:flex-row sm:items-center flex-grow">
+                <div>
+                    <h3 class="text-2xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+                        {{ $title }}
+                    </h3>
+                </div>
+                @if($search !== null)
+                <div class="relative w-full sm:w-80 group">
+                    <x-shared::form.text-input 
+                        wire:model.live.debounce.400ms="search" 
+                        placeholder="Buscar..." 
+                        class="h-[46px] rounded-2xl pl-12 pr-10" 
+                    />
+
+                    <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-indigo-600 transition-colors pointer-events-none">
+                        <i class="fa-solid fa-magnifying-glass text-base"></i>
+                    </div>
+
+                    <div wire:loading wire:target="search" class="absolute right-4 top-1/2 -translate-y-1/2">
+                        <div class="h-4 w-4 animate-spin rounded-full border-2 border-indigo-500 border-t-transparent"></div>
+                    </div>
+                </div>
+                @endif
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3">
+                <div class="flex items-center gap-1 rounded-2xl bg-gray-100/80 p-1.5 dark:bg-white/[0.03] border border-gray-200 dark:border-gray-800">
+                    @if($exportPdf)
+                        <a href="{{ $exportPdf }}" target="_blank" 
+                           class="flex h-9 w-9 items-center justify-center rounded-xl text-gray-500 transition-all hover:bg-white hover:text-red-600 hover:shadow-sm dark:hover:bg-gray-800">
+                            <i class="fa-solid fa-file-pdf"></i>
+                        </a>
+                    @endif
+                    @if($exportExcel)
+                        <a href="{{ $exportExcel }}" 
+                           class="flex h-9 w-9 items-center justify-center rounded-xl text-gray-500 transition-all hover:bg-white hover:text-green-600 hover:shadow-sm dark:hover:bg-gray-800">
+                            <i class="fa-solid fa-file-excel"></i>
+                        </a>
+                    @endif
+                </div>
+
+                @if($perPage !== null)
+                <div class="relative">
+                    <select 
+                        wire:model.live="perPage" 
+                        class="h-[46px] border appearance-none rounded-2xl border-gray-200 bg-white pl-4 pr-10 text-xs font-bold tracking-wide text-gray-600 transition-all focus:ring-4 focus:ring-indigo-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+                    >
+                        <option value="7">7 Filas</option>
+                        <option value="25">25 Filas</option>
+                        <option value="50">50 Filas</option>
+                    </select>
+                    <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
+                        <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                    </div>
+                </div>
+                @endif
+
+                @if(isset($filters) && $filters->isNotEmpty())
+                <button 
+                    @click="$dispatch('toggle-filtros')" 
+                    class="group inline-flex h-[46px] items-center rounded-2xl border border-indigo-100 bg-indigo-50/50 px-5 text-sm font-bold text-indigo-700 transition-all hover:bg-indigo-100 dark:border-indigo-500/20 dark:bg-indigo-500/5 dark:text-indigo-400"
+                >
+                    <i class="fa-solid fa-sliders mr-2.5 transition-transform group-hover:rotate-12"></i>
+                    Filtros Avanzados
+                </button>
+                @endif
+
+                @if($createRoute)
+                    <x-shared::form.button-primary 
+                        tag="a" 
+                        href="{{ $createRoute }}" 
+                        class="h-[46px] !rounded-2xl px-6 shadow-lg shadow-indigo-500/20"
+                    >
+                        <i class="fa-solid fa-plus mr-2 text-xs"></i>
+                        {{ __('Nuevo Registro') }}
+                    </x-shared::form.button-primary>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    {{-- FILTROS AVANZADOS CON CONTROL DE SELECT2 AUTO-INICIALIZADO --}}
+    <div 
+        x-data="{ show: false }" 
+        @toggle-filtros.window="show = !show"
+        x-show="show"
+        x-cloak
+        x-collapse
+        class="border-t border-gray-200 bg-gray-50/50 dark:border-gray-800 dark:bg-gray-900/50"
+    >
+        <div class="px-6 py-6 lg:px-8">
+            <div 
+                class="grid grid-cols-1 gap-6 sm:grid-cols-12"
+                x-init="
+                    $watch('show', value => {
+                        if(value) {
+                            $nextTick(() => {
+                                $('.select2-dynamic').each(function () {
+                                    const $el = $(this);
+                                    if ($el.data('select2')) $el.select2('destroy');
+                                    $el.select2({
+                                        placeholder: $el.data('placeholder') || 'Seleccionar...',
+                                        allowClear: true,
+                                        width: '100%',
+                                        containerCssClass: 'premium-select2'
+                                    }).on('change', function() {
+                                        @this.set($el.data('model'), $(this).val());
+                                    });
+                                });
+                            });
+                        }
+                    });
+                    
+                    Livewire.on('reinit-select2', () => {
+                        $('.select2-dynamic').each(function () {
+                            const $el = $(this);
+                            $el.select2({
+                                placeholder: $el.data('placeholder') || 'Seleccionar...',
+                                allowClear: true,
+                                width: '100%',
+                                containerCssClass: 'premium-select2'
+                            }).on('change', function() {
+                                @this.set($el.data('model'), $(this).val());
+                            });
+                        });
+                    });
+                "
+            >
+                {{ $filters }}
+            </div>
+        </div>
+    </div>
+
+    {{-- AREA DE TABLA --}}
+    <div class="relative min-h-[200px]">
+        <div wire:loading.delay.longest class="absolute inset-0 z-20 flex items-center justify-center bg-white/60 backdrop-blur-[2px] dark:bg-gray-900/60 transition-all">
+            <div class="flex flex-col items-center">
+                <div class="h-10 w-10 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent shadow-lg shadow-indigo-500/20"></div>
+                <span class="mt-3 text-xs font-bold uppercase tracking-widest text-indigo-600 animate-pulse">Sincronizando...</span>
+            </div>
+        </div>
+        
+        {{-- 💡 SOLUCIÓN: Añadimos 'pb-24' para dar espacio vertical interno al dropdown cuando hay pocas filas --}}
+        <div class="overflow-x-auto rounded-b-3xl pb-24">
+            {{ $slot }}
+        </div>
+    </div>
+</div>
