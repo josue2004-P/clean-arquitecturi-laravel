@@ -33,6 +33,11 @@ use App\Contexts\Shared\Presentation\Livewire\TiposCredito\IndexTiposCredito;
 use App\Contexts\Shared\Presentation\Livewire\TiposCredito\CreateTipoCredito;
 use App\Contexts\Shared\Presentation\Livewire\TiposCredito\EditTipoCredito;
 
+// --- IMPORTACIONES MÓDULO 5: TIPO DE VIVIENDAS ---
+use App\Contexts\Shared\Presentation\Livewire\TiposVivienda\IndexTiposVivienda;
+use App\Contexts\Shared\Presentation\Livewire\TiposVivienda\CreateTipoVivienda;
+use App\Contexts\Shared\Presentation\Livewire\TiposVivienda\EditTipoVivienda;
+
 Route::get('/', WelcomePage::class)->name('home');
 Route::get('/contacto', ContactPage::class)->name('contactar');
 
@@ -65,6 +70,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('tipos-credito', IndexTiposCredito::class)->name('tipos-credito.index');
     Route::get('tipos-credito/crear', CreateTipoCredito::class)->name('tipos-credito.create');
     Route::get('tipos-credito/{id}/editar', EditTipoCredito::class)->name('tipos-credito.edit');
+
+    // --- MÓDULO 5: CATÁLOGO DE TIPO DE VIVIENDAS ---
+    Route::get('tipos-vivienda', IndexTiposVivienda::class)->name('tipos-vivienda.index');
+    Route::get('tipos-vivienda/crear', CreateTipoVivienda::class)->name('tipos-vivienda.create');
+    Route::get('tipos-vivienda/{id}/editar', EditTipoVivienda::class)->name('tipos-vivienda.edit');
 
 });
 

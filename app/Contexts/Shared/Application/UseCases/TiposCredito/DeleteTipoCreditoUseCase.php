@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Contexts\Shared\Application\UseCases\TiposCredito;
 
 use App\Contexts\Shared\Domain\Repositories\TipoCreditoRepositoryInterface;

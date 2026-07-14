@@ -16,6 +16,11 @@ use App\Contexts\Shared\Presentation\Livewire\TiposCredito\IndexTiposCredito;
 use App\Contexts\Shared\Presentation\Livewire\TiposCredito\CreateTipoCredito;
 use App\Contexts\Shared\Presentation\Livewire\TiposCredito\EditTipoCredito;
 
+// TIPO DE VIVIENDA
+use App\Contexts\Shared\Presentation\Livewire\TiposVivienda\IndexTiposVivienda;
+use App\Contexts\Shared\Presentation\Livewire\TiposVivienda\CreateTipoVivienda;
+use App\Contexts\Shared\Presentation\Livewire\TiposVivienda\EditTipoVivienda;
+
 class SharedServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -40,6 +45,11 @@ class SharedServiceProvider extends ServiceProvider
         Livewire::component('shared::tipos-credito.create-tipo-credito', CreateTipoCredito::class);
         Livewire::component('shared::tipos-credito.edit-tipo-credito', EditTipoCredito::class);
 
+        // TIPO DE VIVIENDA
+        Livewire::component('shared::tipos-vivienda.index-tipos-vivienda', IndexTiposVivienda::class);
+        Livewire::component('shared::tipos-vivienda.create-tipo-vivienda', CreateTipoVivienda::class);
+        Livewire::component('shared::tipos-vivienda.edit-tipo-vivienda', EditTipoVivienda::class);
+
         $this->app->bind(
             \App\Contexts\Shared\Domain\Repositories\AsentamientoRepositoryInterface::class,
             \App\Contexts\Shared\Infrastructure\Repositories\EloquentAsentamientoRepository::class
@@ -48,6 +58,11 @@ class SharedServiceProvider extends ServiceProvider
         $this->app->bind(
             \App\Contexts\Shared\Domain\Repositories\TipoCreditoRepositoryInterface::class,
             \App\Contexts\Shared\Infrastructure\Repositories\EloquentTipoCreditoRepository::class
+        );
+
+        $this->app->bind(
+            \App\Contexts\Shared\Domain\Repositories\TipoViviendaRepositoryInterface::class,
+            \App\Contexts\Shared\Infrastructure\Repositories\EloquentTipoViviendaRepository::class
         );
     }
 }
