@@ -6,7 +6,8 @@
     <div class="relative group">
         @if ($firma || $existingFirma)
             <div class="flex flex-col items-center gap-3">
-                <img src="{{ $firma ? $firma->temporaryUrl() : asset('storage/' . $existingFirma) }}" 
+                {{-- Modificado para usar la ruta del controlador privado local --}}
+                <img src="{{ $firma ? $firma->temporaryUrl() : route('security.usuarios.asset', ['directory' => 'firmas', 'filename' => basename($existingFirma)]) }}" 
                      class="h-16 w-36 rounded-xl object-contain bg-white border border-gray-200 dark:border-gray-800 shadow-sm p-1.5" />
                 
                 <button type="button" wire:click="removeFirma" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-900/30 text-[10px] font-bold uppercase tracking-wider hover:bg-red-600 hover:text-white dark:hover:bg-red-600 transition-all duration-150">

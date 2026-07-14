@@ -23,7 +23,7 @@ class UploadFirma extends Component
             'firma' => 'image|max:1024|mimes:png,jpg,jpeg',
         ]);
 
-        $path = $this->firma->store('usuarios/firmas', 'public');
+        $path = $this->firma->store('usuarios/firmas', 'local');
         $this->dispatch('firmaUploaded', $path);
     }
 

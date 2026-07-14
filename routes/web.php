@@ -19,8 +19,14 @@ use App\Contexts\Security\Presentation\Livewire\Perfiles\EditPerfil;
 use App\Contexts\Security\Presentation\Livewire\Usuarios\IndexUsuarios;
 use App\Contexts\Security\Presentation\Livewire\Usuarios\CreateUsuario;
 use App\Contexts\Security\Presentation\Livewire\Usuarios\EditUsuario;
+use App\Contexts\Security\Infrastructure\Controllers\DownloadUsuarioDigitalAssetController;
 
 use App\Contexts\Security\Presentation\Livewire\Profile\EditProfilePage;
+
+// --- IMPORTACIONES MÓDULO 4: ASENTAMIENTOS ---
+use App\Contexts\Shared\Presentation\Livewire\Asentamientos\IndexAsentamientos;
+use App\Contexts\Shared\Presentation\Livewire\Asentamientos\CreateAsentamiento;
+use App\Contexts\Shared\Presentation\Livewire\Asentamientos\EditAsentamiento;
 
 
 Route::get('/', WelcomePage::class)->name('home');
@@ -42,6 +48,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('usuarios', IndexUsuarios::class)->name('usuarios.index');
     Route::get('usuarios/crear', CreateUsuario::class)->name('usuarios.create');
     Route::get('usuarios/{id}/editar', EditUsuario::class)->name('usuarios.edit');
+
+    Route::get('usuarios/assets/{directory}/{filename}', DownloadUsuarioDigitalAssetController::class)
+        ->name('security.usuarios.asset');
+
+    // --- MÓDULO 4: CATÁLOGO DE ASENTAMIENTOS ---
+    Route::get('asentamientos', IndexAsentamientos::class)->name('asentamientos.index');
+    Route::get('asentamientos/crear', CreateAsentamiento::class)->name('asentamientos.create');
+    Route::get('asentamientos/{id}/editar', EditAsentamiento::class)->name('asentamientos.edit');
+
 });
 
 Route::get('/dashboard', DashboardPage::class)

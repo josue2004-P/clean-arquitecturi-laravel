@@ -13,6 +13,14 @@ class MenuHelper
                 'path' => '/dashboard',
             ],
             [
+                'name' => 'Catálogos',
+                'icon' => 'catalog-icon',
+                'permiso' => 'asentamientos', 
+                'subItems' => [
+                    ['name' => 'Asentamientos', 'path' => '/asentamientos', 'permiso' => 'asentamientos'],
+                ],
+            ],
+            [
                 'name' => 'Usuarios',
                 'icon' => 'users',
                 'permiso' => 'usuarios', 
@@ -21,7 +29,8 @@ class MenuHelper
                     ['name' => 'Perfiles', 'path' => '/perfiles', 'permiso' => 'perfiles'],
                     ['name' => 'Permisos', 'path' => '/permisos', 'permiso' => 'permisos'],
                 ],
-            ]
+            ],
+       
         ];
     }
 
@@ -96,6 +105,8 @@ class MenuHelper
             'gear' => '<i class="text-xl fa-solid fa-gear"></i>',
 
             'catalog' => '<i class=" text-xl  fa-solid fa-square-poll-horizontal"></i>',
+
+            'catalog-icon' => '<i class="text-xl fa-solid fa-earth-americas"></i>',
 
         ];
 

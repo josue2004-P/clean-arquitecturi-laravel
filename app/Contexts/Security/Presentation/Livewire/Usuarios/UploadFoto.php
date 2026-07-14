@@ -23,7 +23,7 @@ class UploadFoto extends Component
             'foto' => 'image|max:2048|mimes:jpeg,png,jpg,webp',
         ]);
 
-        $path = $this->foto->store('usuarios/fotos', 'public');
+        $path = $this->foto->store('usuarios/fotos', 'local');
         $this->dispatch('fotoUploaded', $path);
     }
 
