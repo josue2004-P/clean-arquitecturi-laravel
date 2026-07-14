@@ -28,6 +28,10 @@ use App\Contexts\Shared\Presentation\Livewire\Asentamientos\IndexAsentamientos;
 use App\Contexts\Shared\Presentation\Livewire\Asentamientos\CreateAsentamiento;
 use App\Contexts\Shared\Presentation\Livewire\Asentamientos\EditAsentamiento;
 
+// --- IMPORTACIONES MÓDULO 4: TIPO DE CREDITOS ---
+use App\Contexts\Shared\Presentation\Livewire\TiposCredito\IndexTiposCredito;
+use App\Contexts\Shared\Presentation\Livewire\TiposCredito\CreateTipoCredito;
+use App\Contexts\Shared\Presentation\Livewire\TiposCredito\EditTipoCredito;
 
 Route::get('/', WelcomePage::class)->name('home');
 Route::get('/contacto', ContactPage::class)->name('contactar');
@@ -56,6 +60,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('asentamientos', IndexAsentamientos::class)->name('asentamientos.index');
     Route::get('asentamientos/crear', CreateAsentamiento::class)->name('asentamientos.create');
     Route::get('asentamientos/{id}/editar', EditAsentamiento::class)->name('asentamientos.edit');
+
+    // --- MÓDULO 4: CATÁLOGO DE TIPO DE CREDITOS ---
+    Route::get('tipos-credito', IndexTiposCredito::class)->name('tipos-credito.index');
+    Route::get('tipos-credito/crear', CreateTipoCredito::class)->name('tipos-credito.create');
+    Route::get('tipos-credito/{id}/editar', EditTipoCredito::class)->name('tipos-credito.edit');
 
 });
 

@@ -18,6 +18,7 @@ class MenuHelper
                 'permiso' => 'asentamientos', 
                 'subItems' => [
                     ['name' => 'Asentamientos', 'path' => '/asentamientos', 'permiso' => 'asentamientos'],
+                    ['name' => 'Tipos de Crédito', 'path' => '/tipos-credito', 'permiso' => 'tipos_credito'],
                 ],
             ],
             [
