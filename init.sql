@@ -2,7 +2,7 @@
 -- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
--- Servidor: bd_mysql_erp_collosuscrane
+-- Servidor: bd_mysql_inmobiliaria
 -- Tiempo de generación: 13-07-2026 a las 22:21:22
 -- Versión del servidor: 8.0.46
 -- Versión de PHP: 8.3.26
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `bd_mysql_erp_collosuscrane`
+-- Base de datos: `bd_mysql_inmobiliaria`
 --
 
 -- --------------------------------------------------------

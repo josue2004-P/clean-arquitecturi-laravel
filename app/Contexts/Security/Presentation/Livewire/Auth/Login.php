@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 
 class Login extends Component
 {
-    public $email = '';
+    public $usuario = ''; 
     public $password = '';
     public $remember = false;
 
@@ -24,15 +24,15 @@ class Login extends Component
     public function login(AuthenticateUserUseCase $useCase)
     {
         $this->validate([
-            'email' => ['required', 'string', 'email'],
+            'usuario' => ['required', 'string'],
             'password' => ['required', 'string'],
         ]);
 
         try {
-            $throttleKey = Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+            $throttleKey = Str::transliterate(Str::lower($this->usuario).'|'.request()->ip());
 
             $useCase->execute([
-                'email' => $this->email,
+                'usuario' => $this->usuario,
                 'password' => $this->password,
             ], $this->remember, $throttleKey);
 

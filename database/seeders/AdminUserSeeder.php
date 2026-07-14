@@ -11,10 +11,16 @@ class AdminUserSeeder extends Seeder
     public function run(): void
     {
         UserEloquentModel::firstOrCreate(
-            ['email' => 'admin@example.com'],
+            ['email' => 'admin@altamardev.com'],
             [
+                'usuario' => 'admin', 
                 'name' => 'Administrador',
+                'apellido_paterno' => 'Sistema', 
+                'apellido_materno' => 'Inmobiliaria',
                 'password' => Hash::make('admin123'), 
+                'is_activo' => true,
+                'foto' => null,
+                'firma' => null,
             ]
         );
     }

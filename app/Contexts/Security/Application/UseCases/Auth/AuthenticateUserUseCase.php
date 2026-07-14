@@ -10,10 +10,10 @@ class AuthenticateUserUseCase
 {
     public function execute(array $credentials, bool $remember = false, string $throttleKey = ''): void
     {
-        $user = UserEloquentModel::where('email', $credentials['email'])->first();
+        $user = UserEloquentModel::where('usuario', $credentials['usuario'])->first();
         if ($user && !$user->is_activo) {
             throw ValidationException::withMessages([
-                'email' => 'Esta cuenta se encuentra suspendida temporalmente. Contacta al administrador.',
+                'usuario' => 'Esta cuenta se encuentra suspendida temporalmente. Contacta al administrador.',
             ]);
         }
 

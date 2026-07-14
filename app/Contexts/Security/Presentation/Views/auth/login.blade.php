@@ -1,27 +1,25 @@
 <div>
     <x-slot:title>Login</x-slot:title>
     <x-slot:titleCard>Iniciar Sesión</x-slot:titleCard>
-    <x-slot:descripcionCard>Ingresa tu email y contraseña para iniciar sesión!</x-slot:descripcionCard>
+    <x-slot:descripcionCard>Ingresa tu usuario y contraseña para iniciar sesión!</x-slot:descripcionCard>
     
     <form wire:submit="login">
         <div class="space-y-5">
 
-            <!-- Email Input Group -->
             <div>
-                <x-shared::form.input-label for="email" required :value="__('Email')" />
+                <x-shared::form.input-label for="usuario" required :value="__('Usuario')" />
                 <x-shared::form.text-input
-                    type="email"
-                    wire:model="email"
-                    id="email"
-                    placeholder="info@gmail.com"
+                    type="text"
+                    wire:model="usuario"
+                    id="usuario"
+                    placeholder="Ingresa tu usuario"
                     required 
                     autofocus
                     autocomplete="username" 
                 />
-                <x-shared::form.input-error :messages="$errors->get('email')" class="mt-2" />
+                <x-shared::form.input-error :messages="$errors->get('usuario')" class="mt-2" />
             </div>
 
-            <!-- Password Input Group -->
             <div>
                 <x-shared::form.input-label required for="password" :value="__('Password')" />
                 <div class="relative">
@@ -38,7 +36,6 @@
                 <x-shared::form.input-error :messages="$errors->get('password')" class="mt-2" />
             </div>
 
-            <!-- Remember Me & Forgot Password -->
             <div class="flex items-center justify-between">
                 <label class="flex items-center cursor-pointer select-none">
                     <input type="checkbox" wire:model="remember" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500/20 dark:border-gray-700">
@@ -50,7 +47,6 @@
                 </x-shared::form.link>
             </div>
 
-            <!-- Submit Button -->
             <div>
                 <x-shared::form.button-primary type="submit" wire:loading.attr="disabled" class="w-full justify-center shadow-lg shadow-indigo-500/10">
                     <span wire:loading.remove>Iniciar Sesión</span>
