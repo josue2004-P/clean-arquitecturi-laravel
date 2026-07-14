@@ -12,10 +12,15 @@ class CreateUserUseCase
     public function execute(array $data): void
     {
         $this->repository->save([
-            'name'      => $data['name'],
-            'email'     => $data['email'],
-            'password'  => Hash::make($data['password']),
-            'is_activo' => (bool)($data['is_activo'] ?? true),
+            'usuario'          => $data['usuario'],
+            'name'             => $data['name'],
+            'apellido_paterno' => $data['apellido_paterno'],
+            'apellido_materno' => $data['apellido_materno'],
+            'email'            => $data['email'],
+            'password'         => Hash::make($data['password']),
+            'is_activo'        => (bool)($data['is_activo'] ?? true),
+            'foto'             => $data['foto'] ?? null,
+            'firma'            => $data['firma'] ?? null,
         ]);
     }
 }

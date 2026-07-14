@@ -23,9 +23,12 @@ use App\Contexts\Security\Presentation\Livewire\Permisos\CreatePermiso;
 use App\Contexts\Security\Presentation\Livewire\Perfiles\IndexPerfiles;
 use App\Contexts\Security\Presentation\Livewire\Perfiles\CreatePerfil;
 use App\Contexts\Security\Presentation\Livewire\Perfiles\EditPerfil;
+
 use App\Contexts\Security\Presentation\Livewire\Usuarios\IndexUsuarios;
 use App\Contexts\Security\Presentation\Livewire\Usuarios\CreateUsuario;
 use App\Contexts\Security\Presentation\Livewire\Usuarios\EditUsuario;
+use App\Contexts\Security\Presentation\Livewire\Usuarios\UploadFoto;
+use App\Contexts\Security\Presentation\Livewire\Usuarios\UploadFirma;
 
 class SecurityServiceProvider extends ServiceProvider
 {
@@ -74,5 +77,7 @@ class SecurityServiceProvider extends ServiceProvider
         Livewire::component('security.usuarios.index-usuarios', IndexUsuarios::class);
         Livewire::component('security.usuarios.create-usuario', CreateUsuario::class);
         Livewire::component('security.usuarios.edit-usuario', EditUsuario::class);
+        Livewire::component('usuarios.upload-foto', UploadFoto::class);
+        Livewire::component('usuarios.upload-firma', UploadFirma::class);
     }
 }

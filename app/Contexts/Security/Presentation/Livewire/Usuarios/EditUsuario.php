@@ -13,10 +13,19 @@ use Exception;
 class EditUsuario extends Component
 {
     public $userId;
+    public $usuario = '';
     public $name = '';
+    public $apellido_paterno = '';
+    public $apellido_materno = '';
     public $email = '';
     public $is_activo = false;
     public $selectedPerfiles = [];
+
+    public $foto = null;
+    public $firma = null;
+    
+    public $currentFoto = null;
+    public $currentFirma = null;
 
     public function mount($id, UserRepositoryInterface $userRepo)
     {
@@ -25,13 +34,30 @@ class EditUsuario extends Component
         }
 
         $user = $userRepo->findWithPerfiles((int)$id);
-        $this->userId    = $user->id;
-        $this->name      = $user->name;
-        $this->email     = $user->email;
-        $this->is_activo = (bool)$user->is_activo;
+        $this->userId           = $user->id;
+        $this->usuario          = $user->usuario;
+        $this->name             = $user->name;
+        $this->apellido_paterno = $user->apellido_paterno;
+        $this->apellido_materno = $user->apellido_materno;
+        $this->email            = $user->email;
+        $this->is_activo        = (bool)$user->is_activo;
         
-        // Cargar los perfiles actuales del usuario en el array reactivo
+        $this->currentFoto      = $user->foto;
+        $this->currentFirma     = $user->firma;
+        
         $this->selectedPerfiles = $user->perfiles->pluck('id')->map(fn($id) => (string)$id)->toArray();
+    }
+
+    #[On('fotoUploaded')]
+    public function setFoto($path)
+    {
+        $this->foto = $path;
+    }
+
+    #[On('firmaUploaded')]
+    public function setFirma($path)
+    {
+        $this->firma = $path;
     }
 
     public function confirmPermanentDelete()
@@ -62,18 +88,24 @@ class EditUsuario extends Component
     public function save(UpdateUserUseCase $useCase)
     {
         $this->validate([
-            'name'      => 'required|string|max:255',
-            'email'     => 'required|string|email|max:255|unique:users,email,' . $this->userId,
-            'is_activo' => 'nullable|boolean',
+            'name'               => 'required|string|max:255',
+            'apellido_paterno'   => 'required|string|max:255',
+            'apellido_materno'   => 'required|string|max:255',
+            'email'              => 'required|string|email|max:255|unique:users,email,' . $this->userId,
+            'is_activo'          => 'nullable|boolean',
             'selectedPerfiles'   => 'nullable|array',
             'selectedPerfiles.*' => 'exists:perfiles,id'
         ]);
 
         try {
             $useCase->execute($this->userId, [
-                'name'      => $this->name,
-                'email'     => $this->email,
-                'is_activo' => $this->is_activo,
+                'name'             => $this->name,
+                'apellido_paterno' => $this->apellido_paterno,
+                'apellido_materno' => $this->apellido_materno,
+                'email'            => $this->email,
+                'is_activo'        => $this->is_activo,
+                'foto'             => $this->foto ?? $this->currentFoto,
+                'firma'            => $this->firma ?? $this->currentFirma,
             ], $this->selectedPerfiles);
 
             session()->flash('success', "El usuario {$this->name} ha sido actualizado.");

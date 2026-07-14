@@ -11,9 +11,13 @@ class UpdateUserUseCase
     public function execute(int $id, array $data, array $perfiles = []): void
     {
         $this->repository->update($id, [
-            'name'      => $data['name'],
-            'email'     => $data['email'],
-            'is_activo' => (bool)($data['is_activo'] ?? false),
+            'name'             => $data['name'],
+            'apellido_paterno' => $data['apellido_paterno'],
+            'apellido_materno' => $data['apellido_materno'],
+            'email'            => $data['email'],
+            'is_activo'        => (bool)($data['is_activo'] ?? false),
+            'foto'             => $data['foto'] ?? null,
+            'firma'            => $data['firma'] ?? null,
         ], $perfiles);
     }
 }

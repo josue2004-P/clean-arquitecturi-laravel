@@ -119,8 +119,7 @@
             
             @include('shared::layouts.app-header')
 
-            <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
-                {{-- Soporta Livewire ($slot) y controladores clásicos (@yield) --}}
+            <div class="p-4 md:p-6">
                 @isset($slot)
                     {{ $slot }}
                 @else

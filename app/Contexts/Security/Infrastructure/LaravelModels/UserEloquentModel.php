@@ -14,10 +14,15 @@ class UserEloquentModel extends Authenticatable
     protected $table = 'users';
 
     protected $fillable = [
+        'usuario',
         'name',
+        'apellido_paterno',
+        'apellido_materno',
         'email',
         'password',
         'is_activo',
+        'foto',
+        'firma',
     ];
 
     protected $hidden = [
@@ -29,8 +34,8 @@ class UserEloquentModel extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'is_activo' => 'boolean',
+            'password'          => 'hashed',
+            'is_activo'         => 'boolean',
         ];
     }
 

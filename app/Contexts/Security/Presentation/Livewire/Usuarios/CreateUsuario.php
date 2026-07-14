@@ -3,16 +3,23 @@
 namespace App\Contexts\Security\Presentation\Livewire\Usuarios;
 
 use Livewire\Component;
+use Livewire\Attributes\On;
 use App\Contexts\Security\Application\UseCases\Usuarios\CreateUserUseCase;
 use Exception;
 
 class CreateUsuario extends Component
 {
+    public $usuario = '';
     public $name = '';
+    public $apellido_paterno = '';
+    public $apellido_materno = '';
     public $email = '';
     public $password = '';
     public $password_confirmation = '';
     public $is_activo = true;
+
+    public $foto = null;
+    public $firma = null;
 
     public function mount()
     {
@@ -21,27 +28,47 @@ class CreateUsuario extends Component
         }
     }
 
+    #[On('fotoUploaded')]
+    public function setFoto($path)
+    {
+        $this->foto =$path;
+    }
+
+    #[On('firmaUploaded')]
+    public function setFirma($path)
+    {
+        $this->firma =$path;
+    }
+
     public function save(CreateUserUseCase $useCase)
     {
         $this->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-            'is_activo' => 'nullable|boolean',
+            'usuario'          => 'required|string|max:100|unique:users,usuario',
+            'name'             => 'required|string|max:255',
+            'apellido_paterno' => 'required|string|max:255',
+            'apellido_materno' => 'required|string|max:255',
+            'email'            => 'required|string|email|max:255|unique:users,email',
+            'password'         => 'required|string|min:8|confirmed',
+            'is_activo'        => 'nullable|boolean',
         ]);
 
         try {
             $useCase->execute([
-                'name'      => $this->name,
-                'email'     => $this->email,
-                'password'  => $this->password,
-                'is_activo' => $this->is_activo,
+                'usuario'          => $this->usuario,
+                'name'             => $this->name,
+                'apellido_paterno' => $this->apellido_paterno,
+                'apellido_materno' => $this->apellido_materno,
+                'email'            => $this->email,
+                'password'         => $this->password,
+                'is_activo'        => $this->is_activo,
+                'foto'             => $this->foto,
+                'firma'            => $this->firma,
             ]);
 
             session()->flash('success', 'Usuario registrado con éxito.');
             return $this->redirectRoute('usuarios.index');
         } catch (Exception $e) {
-            $this->addError('email', 'Error al procesar el alta del usuario.');
+            $this->addError('usuario', 'Error al procesar el alta: ' .$e->getMessage());
         }
     }
 
