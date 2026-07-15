@@ -2,7 +2,7 @@
 
 namespace App\Contexts\Security\Infrastructure\Controllers;
 
-use App\Contexts\Security\Infrastructure\Controllers\Controller;
+use App\Contexts\Shared\Infrastructure\Controllers\Controller;
 use App\Contexts\Security\Infrastructure\Requests\ProfileUpdateRequest;
 use App\Contexts\Security\Application\UseCases\Profile\UpdateProfileUseCase;
 use App\Contexts\Security\Application\UseCases\Profile\DestroyAccountUseCase;

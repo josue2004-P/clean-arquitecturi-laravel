@@ -2,7 +2,7 @@
 
 namespace App\Contexts\Security\Infrastructure\Controllers\Auth;
 
-use App\Contexts\Security\Infrastructure\Controllers\Controller;
+use App\Contexts\Shared\Infrastructure\Controllers\Controller;
 use App\Contexts\Security\Application\UseCases\Auth\VerifyEmailUseCase;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;

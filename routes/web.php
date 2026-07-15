@@ -47,6 +47,8 @@ use App\Contexts\Shared\Presentation\Livewire\Amenidades\EditAmenidad;
 use App\Contexts\Viviendas\Presentation\Livewire\IndexViviendas;
 use App\Contexts\Viviendas\Presentation\Livewire\CreateVivienda;
 use App\Contexts\Viviendas\Presentation\Livewire\EditVivienda;
+use App\Contexts\Viviendas\Presentation\Controllers\ViviendaDocumentoController;
+use App\Contexts\Viviendas\Presentation\Controllers\ViviendaFotoController;
 
 Route::get('/', WelcomePage::class)->name('home');
 Route::get('/contacto', ContactPage::class)->name('contactar');
@@ -96,7 +98,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('viviendas', IndexViviendas::class)->name('viviendas.index');
     Route::get('viviendas/crear', CreateVivienda::class)->name('viviendas.create');
     Route::get('viviendas/{id}/editar', EditVivienda::class)->name('viviendas.edit');
+    Route::get('/viviendas/documentos/{id}/descargar', [ViviendaDocumentoController::class, 'download'])
+        ->name('viviendas.documentos.download');
 
+    Route::get('/viviendas/fotos/{id}/ver', [ViviendaFotoController::class, 'show'])
+        ->name('viviendas.fotos.show');
 });
 
 Route::get('/dashboard', DashboardPage::class)

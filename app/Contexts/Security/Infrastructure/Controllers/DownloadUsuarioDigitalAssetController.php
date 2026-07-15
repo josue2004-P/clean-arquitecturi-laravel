@@ -2,7 +2,7 @@
 
 namespace App\Contexts\Security\Infrastructure\Controllers;
 
-use App\Contexts\Security\Infrastructure\Controllers\Controller;
+use App\Contexts\Shared\Infrastructure\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 

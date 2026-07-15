@@ -22,7 +22,7 @@
                     
                     {{-- Fraccionamiento --}}
                     <div>
-                        <x-shared::form.input-label for="fraccionamiento" :value="__('Fraccionamiento / Proyecto')" class="text-gray-700 dark:text-gray-300"/>
+                        <x-shared::form.input-label for="fraccionamiento" :value="__('Fraccionamiento / Proyecto project')"/>
                         <div class="mt-1.5">
                             <x-shared::form.text-input id="fraccionamiento" type="text" wire:model="fraccionamiento" placeholder="ej: Residencial del Bosque" class="w-full font-medium" />
                         </div>
@@ -31,7 +31,7 @@
 
                     {{-- Asentamiento Geográfico Compartido --}}
                     <div>
-                        <x-shared::form.input-label for="asentamiento_id" :value="__('Ubicación Postal / Asentamiento')" required class="text-gray-700 dark:text-gray-300"/>
+                        <x-shared::form.input-label for="asentamiento_id" :value="__('Ubicación Postal / Asentamiento')" required/>
                         <div class="mt-1.5">
                             <select id="asentamiento_id" wire:model="asentamiento_id" class="w-full text-xs font-bold uppercase tracking-wide border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 rounded-none h-11 focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="">-- Seleccionar --</option>
@@ -45,7 +45,7 @@
 
                     {{-- Tipo Vivienda --}}
                     <div>
-                        <x-shared::form.input-label for="tipo_vivienda_id" :value="__('Modelo / Tipo de Vivienda')" required class="text-gray-700 dark:text-gray-300"/>
+                        <x-shared::form.input-label for="tipo_vivienda_id" :value="__('Modelo / Tipo de Vivienda')" required/>
                         <div class="mt-1.5">
                             <select id="tipo_vivienda_id" wire:model="tipo_vivienda_id" class="w-full text-xs font-bold uppercase tracking-wide border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 rounded-none h-11 focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="">-- Seleccionar --</option>
@@ -59,7 +59,7 @@
 
                     {{-- Precio Lista --}}
                     <div>
-                        <x-shared::form.input-label for="precio_lista" :value="__('Precio de Lista ($)')" required class="text-gray-700 dark:text-gray-300"/>
+                        <x-shared::form.input-label for="precio_lista" :value="__('Precio de Lista ($)')" required/>
                         <div class="mt-1.5">
                             <x-shared::form.text-input id="precio_lista" type="number" step="0.01" wire:model="precio_lista" placeholder="0.00" class="w-full font-mono font-bold" />
                         </div>
@@ -68,7 +68,7 @@
 
                     {{-- Recámaras --}}
                     <div>
-                        <x-shared::form.input-label for="recamaras" :value="__('Número de Recámaras')" required class="text-gray-700 dark:text-gray-300"/>
+                        <x-shared::form.input-label for="recamaras" :value="__('Número de Recámaras')" required/>
                         <div class="mt-1.5">
                             <x-shared::form.text-input id="recamaras" type="number" wire:model="recamaras" class="w-full font-medium" />
                         </div>
@@ -77,7 +77,7 @@
 
                     {{-- Estatus --}}
                     <div>
-                        <x-shared::form.input-label for="estatus_vivienda" :value="__('Estatus Operativo')" required class="text-gray-700 dark:text-gray-300"/>
+                        <x-shared::form.input-label for="estatus_vivienda" :value="__('Estatus Operativo')" required/>
                         <div class="mt-1.5">
                             <select id="estatus_vivienda" wire:model="estatus_vivienda" class="w-full text-xs font-bold uppercase tracking-wide border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 rounded-none h-11 focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="Disponible">Disponible</option>
@@ -92,17 +92,16 @@
 
                     {{-- Dirección Detallada Full-Width --}}
                     <div class="md:col-span-3">
-                        <x-shared::form.input-label for="direccion" :value="__('Dirección Completa (Calle, Número, Interno)')" required class="text-gray-700 dark:text-gray-300"/>
+                        <x-shared::form.input-label for="direccion" :value="__('Dirección Completa (Calle, Número, Interno)')" required/>
                         <div class="mt-1.5">
                             <textarea id="direccion" wire:model="direccion" placeholder="Ingresa la calle, número exterior y número de lote exacto..." class="w-full text-sm font-medium border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 rounded-none h-24 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
                         </div>
                         <x-shared::form.input-error :messages="$errors->get('direccion')" class="mt-2" />
                     </div>
 
-                    {{-- Switches Cruzados M:N (Esquemas Financieros y Amenidades) --}}
+                    {{-- Switches Cruzados M:N --}}
                     <div class="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-100 dark:border-gray-900">
-                        
-                        {{-- Créditos Admitidos M:N --}}
+                        {{-- Créditos Admitidos --}}
                         <div>
                             <span class="block text-xs font-bold uppercase tracking-wide text-gray-700 dark:text-gray-300 mb-2">Créditos Financieros Permitidos</span>
                             <div class="space-y-2 max-h-40 overflow-y-auto p-3 border border-gray-150 dark:border-gray-900 rounded-none bg-gray-50/50 dark:bg-gray-950/20">
@@ -115,7 +114,7 @@
                             </div>
                         </div>
 
-                        {{-- Amenidades de la Casa M:N --}}
+                        {{-- Amenidades --}}
                         <div>
                             <span class="block text-xs font-bold uppercase tracking-wide text-gray-700 dark:text-gray-300 mb-2">Amenidades e Infraestructura Interna</span>
                             <div class="space-y-2 max-h-40 overflow-y-auto p-3 border border-gray-150 dark:border-gray-900 rounded-none bg-gray-50/50 dark:bg-gray-950/20">
@@ -127,7 +126,6 @@
                                 @endforeach
                             </div>
                         </div>
-
                     </div>
 
                     {{-- Llaves en Resguardo Control --}}
@@ -142,7 +140,7 @@
                     </div>
 
                     {{-- SECCIÓN DE CONTACTOS RELACIONADOS --}}
-                    <div class="md:col-span-3 pt-6 mt-4 border-t-2 border-dashed border-gray-200 dark:border-gray-800">
+                    <div class="md:col-span-3 pt-6 mt-4 border-t border-dashed border-gray-200 dark:border-gray-800">
                         <div class="flex items-center justify-between mb-4">
                             <div>
                                 <span class="block text-sm font-black uppercase tracking-tight text-gray-900 dark:text-white">Contactos Relacionados Propietario / Llaves</span>
@@ -156,51 +154,163 @@
                         <div class="space-y-4">
                             @foreach($contactos as $index => $contacto)
                                 <div class="grid grid-cols-1 md:grid-cols-12 gap-3 p-4 border border-gray-200 dark:border-gray-800 bg-gray-50/30 dark:bg-gray-900/10 relative rounded-none" wire:key="contacto-row-{{ $index }}">
-                                    
                                     <input type="hidden" wire:model="contactos.{{ $index }}.id">
-
-                                    {{-- Nombre --}}
                                     <div class="md:col-span-3">
                                         <label class="block text-[10px] font-bold text-gray-400 dark:text-gray-550 uppercase tracking-wider mb-1">Nombre Completo</label>
                                         <input type="text" wire:model="contactos.{{ $index }}.nombre" placeholder="ej: Juan Pérez" class="w-full text-xs font-bold border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 rounded-none h-9 focus:ring-indigo-500 focus:border-indigo-500">
                                     </div>
-
-                                    {{-- Relación --}}
                                     <div class="md:col-span-2">
                                         <label class="block text-[10px] font-bold text-gray-400 dark:text-gray-550 uppercase tracking-wider mb-1">Relación / Vínculo</label>
                                         <input type="text" wire:model="contactos.{{ $index }}.relacion" placeholder="ej: Propietario, Vecino" class="w-full text-xs font-medium border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 rounded-none h-9 focus:ring-indigo-500 focus:border-indigo-500">
                                     </div>
-
-                                    {{-- Teléfono --}}
                                     <div class="md:col-span-2">
                                         <label class="block text-[10px] font-bold text-gray-400 dark:text-gray-550 uppercase tracking-wider mb-1">Teléfono</label>
                                         <input type="text" wire:model="contactos.{{ $index }}.telefono" placeholder="10 dígitos" class="w-full text-xs font-mono font-bold border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 rounded-none h-9 focus:ring-indigo-500 focus:border-indigo-500">
                                     </div>
-
-                                    {{-- Correo --}}
                                     <div class="md:col-span-2">
                                         <label class="block text-[10px] font-bold text-gray-400 dark:text-gray-550 uppercase tracking-wider mb-1">Correo Electrónico</label>
                                         <input type="email" wire:model="contactos.{{ $index }}.correo" placeholder="ejemplo@mail.com" class="w-full text-xs font-medium border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 rounded-none h-9 focus:ring-indigo-500 focus:border-indigo-500">
                                     </div>
-
-                                    {{-- Notas Breves --}}
                                     <div class="md:col-span-2">
                                         <label class="block text-[10px] font-bold text-gray-400 dark:text-gray-550 uppercase tracking-wider mb-1">Notas Cortas</label>
                                         <input type="text" wire:model="contactos.{{ $index }}.notes" placeholder="ej: Horarios de atención" class="w-full text-xs font-medium border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 rounded-none h-9 focus:ring-indigo-500 focus:border-indigo-500">
                                     </div>
-
-                                    {{-- Remover --}}
                                     <div class="md:col-span-1 flex items-end justify-center pb-0.5">
                                         <button type="button" wire:click="removeContacto({{ $index }})" class="h-9 w-full border border-red-200 dark:border-red-900/30 bg-red-50/50 hover:bg-red-100 text-red-600 dark:bg-red-950/20 dark:text-red-400 dark:hover:bg-red-950/50 transition-colors flex items-center justify-center rounded-none shadow-xs">
                                             <i class="fa-solid fa-trash-can text-xs"></i>
                                         </button>
                                     </div>
-
                                 </div>
                             @endforeach
                         </div>
                     </div>
 
+                    {{-- SECCIÓN DE EXPEDIENTE DIGITAL DE DOCUMENTOS --}}
+                    <div class="md:col-span-3 pt-6 mt-6 border-t border-dashed border-gray-200 dark:border-gray-800">
+                        <div>
+                            <span class="block text-sm font-black uppercase tracking-tight text-gray-900 dark:text-white">Expediente Digital Transaccional</span>
+                            <p class="text-xs text-gray-400 dark:text-gray-550 font-medium mb-4">Adjunte archivos legibles (PDF, PNG, JPG) necesarios para la validación jurídica y fiscal de la propiedad.</p>
+                        </div>
+
+                        <div class="p-4 border border-gray-200 dark:border-gray-800 bg-gray-50/20 dark:bg-gray-900/5 mb-4 rounded-none">
+                            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                                <div class="md:col-span-4">
+                                    <label class="block text-[10px] font-bold text-gray-400 dark:text-gray-550 uppercase tracking-wider mb-1">Clasificación del Documento</label>
+                                    <select wire:model="temporalTipo" class="w-full text-xs font-bold border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 rounded-none h-9 focus:ring-indigo-500 focus:border-indigo-500">
+                                        <option value="">-- Clasificar archivo --</option>
+                                        @foreach($tiposDisponibles as $key => $value)
+                                            <option value="{{ $key }}">{{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="md:col-span-6">
+                                    <label class="block text-[10px] font-bold text-gray-400 dark:text-gray-550 uppercase tracking-wider mb-1">Seleccionar Archivo Físico</label>
+                                    <input type="file" wire:model="temporalFile" id="temporalFile" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-none file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 dark:file:bg-gray-900 dark:file:text-gray-300 hover:file:bg-indigo-100 border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 h-9 flex items-center">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <button type="button" wire:click="addDocumento" class="w-full inline-flex items-center justify-center h-9 text-xs font-bold uppercase text-white bg-indigo-600 hover:bg-indigo-700 rounded-none transition-colors shadow-xs">
+                                        <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Adjuntar
+                                    </button>
+                                </div>
+                            </div>
+                            <div wire:loading wire:target="temporalFile" class="mt-2 text-[11px] font-bold text-indigo-600 dark:text-indigo-400 animate-pulse">
+                                <i class="fa-solid fa-spinner animate-spin mr-1"></i> Transfiriendo archivo al servidor...
+                            </div>
+                            @error('temporalFile') <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p> @enderror
+                            @error('temporalTipo') <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p> @enderror
+                        </div>
+
+                        @if(count($documentos) > 0)
+                            <div class="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 divide-y divide-gray-200 dark:divide-gray-800">
+                                @foreach($documentos as $index => $doc)
+                                    <div class="p-3 flex items-center justify-between text-xs" wire:key="documento-row-{{ $index }}">
+                                        <input type="hidden" wire:model="documentos.{{ $index }}.id">
+                                        <div class="flex items-center gap-3 min-w-0 flex-1">
+                                            <div class="p-2 bg-gray-100 dark:bg-gray-900 text-gray-500 dark:text-gray-400">
+                                                <i class="fa-solid fa-file-pdf text-base"></i>
+                                            </div>
+                                            <div class="min-w-0 flex-1">
+                                                <span class="block font-bold text-gray-900 dark:text-gray-100 truncate">{{ $doc['nombre_original'] }}</span>
+                                                <div class="flex items-center gap-2 mt-0.5 text-[10px] text-gray-400 dark:text-gray-550 font-medium">
+                                                    <span class="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-900 rounded-none text-gray-600 dark:text-gray-400 uppercase font-bold tracking-wide">
+                                                        {{ $tiposDisponibles[$doc['tipo_documento']] ?? $doc['tipo_documento'] }}
+                                                    </span>
+                                                    <span>•</span>
+                                                    <span>{{ round($doc['peso_bytes'] / 1024, 2) }} KB</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-2 ml-4">
+                                            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10 px-2 py-1 border border-amber-100 dark:border-amber-500/20">Por Guardar</span>
+                                            <button type="button" wire:click="removeDocumento({{ $index }})" class="h-8 px-3 border border-red-200 dark:border-red-900/30 bg-red-50/50 hover:bg-red-100 text-red-600 dark:bg-red-950/20 dark:text-red-400 dark:hover:bg-red-950/50 transition-colors flex items-center justify-center">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="p-6 text-center border border-dashed border-gray-200 dark:border-gray-800 bg-gray-50/10 text-xs font-medium text-gray-400 dark:text-gray-550">
+                                <i class="fa-solid fa-folder-open text-lg block mb-1 text-gray-300 dark:text-gray-700"></i> No se han anexado documentos digitales a este expediente todavía.
+                            </div>
+                        @endif
+                    </div>
+
+                    {{-- SECCIÓN DE GALERÍA FOTOGRÁFICA --}}
+                    <div class="md:col-span-3 pt-6 mt-6 border-t border-dashed border-gray-200 dark:border-gray-800">
+                        <div>
+                            <span class="block text-sm font-black uppercase tracking-tight text-gray-900 dark:text-white">Galería Fotográfica Comercial</span>
+                            <p class="text-xs text-gray-400 dark:text-gray-550 font-medium mb-4">Suba las capturas de fachadas e interiores. Marque la estrella para fijar la portada del inmueble.</p>
+                        </div>
+
+                        <div class="p-4 border border-gray-200 dark:border-gray-800 bg-gray-50/20 dark:bg-gray-900/5 mb-6 rounded-none">
+                            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                                <div class="md:col-span-10">
+                                    <label class="block text-[10px] font-bold text-gray-400 dark:text-gray-550 uppercase tracking-wider mb-1">Seleccionar Imágenes (JPG, PNG)</label>
+                                    <input type="file" wire:model="temporalFotoFile" id="temporalFotoFile" accept="image/*" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-none file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 dark:file:bg-gray-900 dark:file:text-gray-300 hover:file:bg-indigo-100 border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 h-9 flex items-center">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <button type="button" wire:click="addFoto" class="w-full inline-flex items-center justify-center h-9 text-xs font-bold uppercase text-white bg-indigo-600 hover:bg-indigo-700 rounded-none transition-colors shadow-xs">
+                                        <i class="fa-solid fa-camera mr-2"></i> Subir
+                                    </button>
+                                </div>
+                            </div>
+                            <div wire:loading wire:target="temporalFotoFile" class="mt-2 text-[11px] font-bold text-indigo-600 dark:text-indigo-400 animate-pulse">
+                                <i class="fa-solid fa-spinner animate-spin mr-1"></i> Subiendo imagen privada al servidor local...
+                            </div>
+                            @error('temporalFotoFile') <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p> @enderror
+                        </div>
+
+                        @if(count($fotos) > 0)
+                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                @foreach($fotos as $index => $f)
+                                    <div class="relative border border-gray-200 dark:border-gray-800 p-2 bg-white dark:bg-gray-950 group rounded-none" wire:key="foto-card-{{ $index }}">
+                                        <input type="hidden" wire:model="fotos.{{ $index }}.id">
+                                        
+                                        <div class="aspect-video w-full bg-gray-50 dark:bg-gray-900 flex items-center justify-center overflow-hidden border border-gray-100 dark:border-gray-900">
+                                            {{-- Muestra la preview temporal reactiva de Livewire en creación --}}
+                                            <img src="{{ $f['preview'] }}" class="w-full h-full object-cover">
+                                        </div>
+
+                                        <div class="mt-2 text-[10px] font-medium text-gray-500 dark:text-gray-400 truncate px-1">{{ $f['nombre_original'] }}</div>
+                                        <div class="mt-3 pt-2 border-t border-gray-150 dark:border-gray-900 flex items-center justify-between">
+                                            <button type="button" wire:click="setFotoPrincipal({{ $index }})" class="text-xs transition-colors flex items-center {{ $f['es_principal'] ? 'text-amber-500 font-bold' : 'text-gray-400 hover:text-amber-400' }}">
+                                                <i class="{{ $f['es_principal'] ? 'fa-solid' : 'fa-regular' }} fa-star mr-1"></i>
+                                                <span class="text-[9px] uppercase tracking-tight">{{ $f['es_principal'] ? 'Principal' : 'Fijar' }}</span>
+                                            </button>
+                                            <button type="button" wire:click="removeFoto({{ $index }})" class="text-gray-400 hover:text-red-500 p-1 transition-colors">
+                                                <i class="fa-solid fa-trash-can text-xs"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="p-6 text-center border border-dashed border-gray-200 dark:border-gray-800 bg-gray-50/10 text-xs font-medium text-gray-400 dark:text-gray-550">
+                                <i class="fa-solid fa-images text-lg block mb-1 text-gray-300 dark:text-gray-700"></i> El carrusel comercial de imágenes se encuentra vacío.
+                            </div>
+                        @endif
+                    </div>
                 </div>
                 
                 <x-slot:footer>
@@ -208,7 +318,6 @@
                         <a href="{{ route('viviendas.index') }}" class="inline-flex items-center text-xs font-bold uppercase tracking-wider text-gray-500 hover:text-red-550 transition-colors">
                             <i class="fa-solid fa-xmark mr-2 text-sm"></i> Cancelar
                         </a>
-                        
                         <x-shared::form.button-primary type="submit" class="shadow-lg px-5 h-11 text-xs" wire:loading.attr="disabled">
                             <i class="fa-solid fa-floppy-disk mr-2" wire:loading.remove></i>
                             <i class="fa-solid fa-circle-notch animate-spin mr-2" wire:loading></i> 

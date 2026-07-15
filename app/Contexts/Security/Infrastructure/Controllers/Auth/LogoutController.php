@@ -2,7 +2,7 @@
 
 namespace App\Contexts\Security\Infrastructure\Controllers\Auth;
 
-use App\Contexts\Security\Infrastructure\Controllers\Controller;
+use App\Contexts\Shared\Infrastructure\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

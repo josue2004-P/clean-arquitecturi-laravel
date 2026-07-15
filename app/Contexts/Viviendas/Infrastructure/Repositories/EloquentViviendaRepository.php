@@ -56,6 +56,61 @@ class EloquentViviendaRepository implements ViviendaRepositoryInterface
         });
     }
 
+    public function saveDocumentos(int $viviendaId, array $documentos): void
+    {
+        DB::transaction(function () use ($viviendaId, $documentos) {
+            $model = ViviendaEloquentModel::findOrFail($viviendaId);
+
+            $documentosValidos = array_filter($documentos, function ($d) {
+                return !empty($d['url']) && !empty($d['tipo_documento']);
+            });
+
+            $idsEnviados = array_filter(array_column($documentosValidos, 'id'));
+
+            $model->documentos()->whereNotIn('id', $idsEnviados)->delete();
+
+            foreach ($documentosValidos as $datos) {
+                $model->documentos()->updateOrCreate(
+                    ['id' => $datos['id'] ?? null],
+                    [
+                        'url'             => $datos['url'],
+                        'nombre_original' => $datos['nombre_original'] ?? null,
+                        'tipo_documento'  => $datos['tipo_documento'],
+                        'peso_bytes'      => $datos['peso_bytes'] ?? null,
+                        'verificado'      => (bool)($datos['verificado'] ?? false),
+                    ]
+                );
+            }
+        });
+    }
+
+    public function saveFotos(int $viviendaId, array $fotos): void
+    {
+        DB::transaction(function () use ($viviendaId, $fotos) {
+            $model = ViviendaEloquentModel::findOrFail($viviendaId);
+
+            $fotosValidas = array_filter($fotos, function ($f) {
+                return !empty($f['url']);
+            });
+
+            $idsEnviados = array_filter(array_column($fotosValidas, 'id'));
+
+            $model->fotos()->whereNotIn('id', $idsEnviados)->delete();
+
+            foreach ($fotosValidas as $index => $datos) {
+                $model->fotos()->updateOrCreate(
+                    ['id' => $datos['id'] ?? null],
+                    [
+                        'url'             => $datos['url'],
+                        'nombre_original' => $datos['nombre_original'] ?? null,
+                        'orden'           => $datos['orden'] ?? $index,
+                        'es_principal'    => (bool)($datos['es_principal'] ?? false),
+                    ]
+                );
+            }
+        });
+    }
+
     public function delete(int $id): void
     {
         $model = ViviendaEloquentModel::findOrFail($id);

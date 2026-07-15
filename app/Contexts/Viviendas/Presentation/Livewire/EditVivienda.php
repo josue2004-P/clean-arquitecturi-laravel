@@ -3,8 +3,12 @@
 namespace App\Contexts\Viviendas\Presentation\Livewire;
 
 use Livewire\Component;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 use App\Contexts\Viviendas\Application\UseCases\SaveViviendaUseCase;
 use App\Contexts\Viviendas\Application\UseCases\SaveViviendaContactosUseCase;
+use App\Contexts\Viviendas\Application\UseCases\SaveViviendaDocumentosUseCase;
+use App\Contexts\Viviendas\Application\UseCases\SaveViviendaFotosUseCase;
 
 use App\Contexts\Viviendas\Infrastructure\LaravelModels\ViviendaEloquentModel;
 use App\Contexts\Shared\Infrastructure\LaravelModels\AsentamientoEloquentModel;
@@ -14,6 +18,8 @@ use App\Contexts\Shared\Infrastructure\LaravelModels\AmenidadEloquentModel;
 
 class EditVivienda extends Component
 {
+    use WithFileUploads;
+
     public $asentamientos = [];
     public $tiposVivienda = [];
     public $creditosDisponibles = [];
@@ -32,6 +38,21 @@ class EditVivienda extends Component
     public $amenidades_ids = [];
 
     public array $contactos = [];
+    public array $documentos = [];
+
+    public $temporalFile;
+    public $temporalTipo = '';
+
+    public array $fotos = [];
+    public $temporalFotoFile; 
+
+    public array $tiposDisponibles = [
+        'Escrituras' => 'Escrituras Públicas',
+        'Predial' => 'Boleta de Impuesto Predial',
+        'Identificacion' => 'Identificación Oficial Propietario',
+        'Plano' => 'Plano Arquitectónico / Poligonal',
+        'Contrato' => 'Contrato de Exclusividad',
+    ];
 
     protected array $rules = [
         'fraccionamiento'  => 'nullable|string|max:255',
@@ -55,7 +76,7 @@ class EditVivienda extends Component
         $this->creditosDisponibles = TipoCreditoEloquentModel::where('aplica_vivienda', true)->select('id', 'nombre')->get();
         $this->amenidadesDisponibles = AmenidadEloquentModel::select('id', 'nombre')->get();
 
-        $model = ViviendaEloquentModel::with(['creditos', 'amenidades','contactos'])->findOrFail($id);
+        $model = ViviendaEloquentModel::with(['creditos', 'amenidades','contactos', 'documentos', 'fotos'])->findOrFail($id);
         $this->viviendaId = $model->id;
         $this->fraccionamiento = $model->fraccionamiento;
         $this->asentamiento_id = $model->asentamiento_id;
@@ -77,6 +98,28 @@ class EditVivienda extends Component
                 'telefono' => $c->telefono,
                 'correo'   => $c->correo,
                 'notes'    => $c->notes,
+            ];
+        })->toArray();
+
+        $this->documentos = $model->documentos->map(function($d) {
+            return [
+                'id'              => $d->id, 
+                'url'             => $d->url,
+                'nombre_original' => $d->nombre_original,
+                'tipo_documento'  => $d->tipo_documento,
+                'peso_bytes'      => $d->peso_bytes,
+                'verificado'      => (bool)$d->verificado,
+            ];
+        })->toArray();
+
+        $this->fotos = $model->fotos->sortBy('orden')->map(function($f) {
+            return [
+                'id'              => $f->id,
+                'url'             => $f->url,
+                'nombre_original' => $f->nombre_original,
+                'orden'           => $f->orden,
+                'es_principal'    => (bool)$f->es_principal,
+                'preview'         => null
             ];
         })->toArray();
 
@@ -104,9 +147,87 @@ class EditVivienda extends Component
         $this->contactos = array_values($this->contactos);
     }
 
-
-    public function save(SaveViviendaUseCase $useCase, SaveViviendaContactosUseCase $contactosUseCase)
+    public function addDocumento()
     {
+        $this->validate([
+            'temporalFile' => 'required|file|max:10240',
+            'temporalTipo' => 'required|string',
+        ]);
+
+        $path = $this->temporalFile->store('viviendas/documentos', 'local');
+
+        $this->documentos[] = [
+            'id'              => null,
+            'url'             => $path,
+            'nombre_original' => $this->temporalFile->getClientOriginalName(),
+            'tipo_documento'  => $this->temporalTipo,
+            'peso_bytes'      => $this->temporalFile->getSize(),
+            'verificado'      => false,
+        ];
+
+        $this->reset(['temporalFile', 'temporalTipo']);
+    }
+
+    public function removeDocumento($index)
+    {
+        if (isset($this->documentos[$index]['url'])) {
+            Storage::disk('local')->delete($this->documentos[$index]['url']);
+        }
+
+        unset($this->documentos[$index]);
+        $this->documentos = array_values($this->documentos);
+    }
+
+        public function addFoto()
+    {
+        $this->validate([
+            'temporalFotoFile' => 'required|image|max:5120',
+        ]);
+
+        $path = $this->temporalFotoFile->store('viviendas/fotos', 'local');
+
+        $esPrincipal = count($this->fotos) === 0;
+
+        $this->fotos[] = [
+            'id'              => null,
+            'url'             => $path,
+            'nombre_original' => $this->temporalFotoFile->getClientOriginalName(),
+            'orden'           => count($this->fotos),
+            'es_principal'    => $esPrincipal,
+            'preview'         => $this->temporalFotoFile->temporaryUrl()
+        ];
+
+        $this->reset('temporalFotoFile');
+    }
+
+    public function setFotoPrincipal($index)
+    {
+        foreach ($this->fotos as $key => $foto) {
+            $this->fotos[$key]['es_principal'] = ($key === $index);
+        }
+    }
+
+    public function removeFoto($index)
+    {
+        if (isset($this->fotos[$index]['url'])) {
+            \Illuminate\Support\Facades\Storage::disk('local')->delete($this->fotos[$index]['url']);
+        }
+
+        $fuePrincipal = $this->fotos[$index]['es_principal'];
+        unset($this->fotos[$index]);
+        $this->fotos = array_values($this->fotos);
+
+        if ($fuePrincipal && count($this->fotos) > 0) {
+            $this->fotos[0]['es_principal'] = true;
+        }
+    }
+
+    public function save(
+        SaveViviendaUseCase $useCase, 
+        SaveViviendaContactosUseCase $contactosUseCase,
+        SaveViviendaDocumentosUseCase $documentosUseCase,
+        SaveViviendaFotosUseCase $fotosUseCase
+    ) {
         $this->validate();
 
         $useCase->execute([
@@ -124,6 +245,8 @@ class EditVivienda extends Component
         ]);
 
         $contactosUseCase->execute($this->viviendaId, $this->contactos);
+        $documentosUseCase->execute($this->viviendaId, $this->documentos);
+        $fotosUseCase->execute($this->viviendaId, $this->fotos);
 
         session()->flash('success', 'Ficha de la propiedad actualizada correctamente.');
         return redirect()->route('viviendas.index');
