@@ -6,6 +6,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface AsentamientoRepositoryInterface
 {
+    public function all(): array; 
     public function findByCodigoPostal(string $codigoPostal): array;
     public function create(\App\Contexts\Shared\Domain\Entities\Asentamiento $asentamiento): void;
     public function bulkInsert(array $asentamientos): void;

@@ -9,6 +9,24 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class EloquentAsentamientoRepository implements AsentamientoRepositoryInterface
 {
+
+    public function all(): array
+    {
+        $models = AsentamientoEloquentModel::orderBy('nombre_asentamiento', 'asc')->get();
+
+        return $models->map(function ($model) {
+            return new Asentamiento(
+                $model->id,
+                $model->codigo_postal,
+                $model->estado,
+                $model->municipio,
+                $model->tipo_asentamiento,
+                $model->nombre_asentamiento,
+                $model->ciudad
+            );
+        })->toArray();
+    }
+    
     public function findByCodigoPostal(string $codigoPostal): array
     {
         $models = AsentamientoEloquentModel::where('codigo_postal', $codigoPostal)->get();

@@ -50,6 +50,11 @@ use App\Contexts\Viviendas\Presentation\Livewire\EditVivienda;
 use App\Contexts\Viviendas\Presentation\Controllers\ViviendaDocumentoController;
 use App\Contexts\Viviendas\Presentation\Controllers\ViviendaFotoController;
 
+// --- IMPORTACIONES MÓDULO 6: CLIENTES ---
+use App\Contexts\Clientes\Presentation\Livewire\IndexClientes;
+use App\Contexts\Clientes\Presentation\Livewire\CreateCliente;
+use App\Contexts\Clientes\Presentation\Livewire\EditCliente;
+
 Route::get('/', WelcomePage::class)->name('home');
 Route::get('/contacto', ContactPage::class)->name('contactar');
 
@@ -103,6 +108,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/viviendas/fotos/{id}/ver', [ViviendaFotoController::class, 'show'])
         ->name('viviendas.fotos.show');
+
+    // --- MÓDULO 6: COMERCIAL DE COMPRADORES (CLIENTES) ---
+    Route::get('clientes', IndexClientes::class)->name('clientes.index');
+    Route::get('clientes/crear', CreateCliente::class)->name('clientes.create');
+    Route::get('clientes/{id}/editar', EditCliente::class)->name('clientes.edit');
 });
 
 Route::get('/dashboard', DashboardPage::class)

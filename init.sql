@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: bd_mysql_inmobiliaria
--- Tiempo de generación: 13-07-2026 a las 22:21:22
--- Versión del servidor: 8.0.46
+-- Tiempo de generación: 16-07-2026 a las 01:48:00
+-- Versión del servidor: 8.0.44
 -- Versión de PHP: 8.3.26
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -18,8 +18,48 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `bd_mysql_inmobiliaria`
+-- Base de datos: `inmobiliaria`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `amenidades`
+--
+
+CREATE TABLE `amenidades` (
+  `id` bigint UNSIGNED NOT NULL,
+  `nombre` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `amenidad_vivienda`
+--
+
+CREATE TABLE `amenidad_vivienda` (
+  `amenidad_id` bigint UNSIGNED NOT NULL,
+  `vivienda_id` bigint UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `asentamientos`
+--
+
+CREATE TABLE `asentamientos` (
+  `id` bigint UNSIGNED NOT NULL,
+  `codigo_postal` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `estado` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `municipio` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ciudad` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tipo_asentamiento` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nombre_asentamiento` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -43,6 +83,17 @@ CREATE TABLE `cache_locks` (
   `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `owner` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `expiration` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `credito_vivienda`
+--
+
+CREATE TABLE `credito_vivienda` (
+  `tipo_credito_id` bigint UNSIGNED NOT NULL,
+  `vivienda_id` bigint UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -115,7 +166,13 @@ CREATE TABLE `migrations` (
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (1, '0001_01_01_000000_create_users_table', 1),
 (2, '0001_01_01_000001_create_cache_table', 1),
-(3, '0001_01_01_000002_create_jobs_table', 1);
+(3, '0001_01_01_000002_create_jobs_table', 1),
+(4, '2026_07_14_031524_create_asentamientos_table', 1),
+(5, '2026_07_14_040013_create_tipos_credito_table', 1),
+(6, '2026_07_14_041428_create_tipos_vivienda_table', 1),
+(7, '2026_07_14_042351_create_amenidades_table', 1),
+(8, '2026_07_15_012644_create_viviendas_tables', 1),
+(9, '2026_07_15_012701_create_credito_y_amenidad_vivienda_tables', 1);
 
 -- --------------------------------------------------------
 
@@ -143,13 +200,6 @@ CREATE TABLE `perfiles` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Volcado de datos para la tabla `perfiles`
---
-
-INSERT INTO `perfiles` (`id`, `nombre`, `descripcion`, `created_at`, `updated_at`) VALUES
-(1, 'administrador', 'Perfil con todos los permisos del sistema', '2026-07-14 04:20:51', '2026-07-14 04:20:51');
-
 -- --------------------------------------------------------
 
 --
@@ -167,14 +217,6 @@ CREATE TABLE `perfil_permiso` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Volcado de datos para la tabla `perfil_permiso`
---
-
-INSERT INTO `perfil_permiso` (`perfil_id`, `permiso_id`, `is_read`, `is_create`, `is_update`, `is_delete`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 1, 1, 1, '2026-07-14 04:20:51', '2026-07-14 04:20:51'),
-(1, 2, 1, 1, 1, 1, '2026-07-14 04:20:51', '2026-07-14 04:20:51');
-
 -- --------------------------------------------------------
 
 --
@@ -187,13 +229,6 @@ CREATE TABLE `perfil_user` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `perfil_user`
---
-
-INSERT INTO `perfil_user` (`user_id`, `perfil_id`, `created_at`, `updated_at`) VALUES
-(1, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -208,14 +243,6 @@ CREATE TABLE `permisos` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `permisos`
---
-
-INSERT INTO `permisos` (`id`, `nombre`, `descripcion`, `created_at`, `updated_at`) VALUES
-(1, 'administrador', 'Permiso del sistema', '2026-07-14 04:20:51', '2026-07-14 04:20:51'),
-(2, 'mod-est-anl', 'Permiso modulo de configuracion', '2026-07-14 04:20:51', '2026-07-14 04:20:51');
 
 -- --------------------------------------------------------
 
@@ -237,7 +264,37 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('6UWgmALPux1SRbj4K0jiUhppK2T9ONKIHSPtQWSt', 1, '172.20.0.1', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'eyJfdG9rZW4iOiJPY0JKQWlXY0t5MW1XdW9CS0oxT3Y0Y1hzWFJTZXVrTkIyNnhZZnBWIiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cL2xvY2FsaG9zdDo4MDgwXC91c3VhcmlvcyIsInJvdXRlIjoidXN1YXJpb3MuaW5kZXgifSwiX2ZsYXNoIjp7Im9sZCI6W10sIm5ldyI6W119LCJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI6MX0=', 1783981266);
+('7aI0DYBz1HaqmamV5syS4r7KyQ6HzAwqqE7QqIyF', NULL, '192.168.96.1', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'eyJfdG9rZW4iOiJ1NEwwZHZhWWtySDZ4T2tsYm5vRG5HR014RmVyQjFtc3p6TzNJWTFtIiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cL2xvY2FsaG9zdDo4MDgwIiwicm91dGUiOiJob21lIn0sIl9mbGFzaCI6eyJvbGQiOltdLCJuZXciOltdfX0=', 1784166471);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tipos_credito`
+--
+
+CREATE TABLE `tipos_credito` (
+  `id` bigint UNSIGNED NOT NULL,
+  `nombre` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `descripcion` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `aplica_vivienda` tinyint(1) NOT NULL DEFAULT '1',
+  `aplica_cliente` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tipos_vivienda`
+--
+
+CREATE TABLE `tipos_vivienda` (
+  `id` bigint UNSIGNED NOT NULL,
+  `nombre` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `descripcion` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -247,26 +304,117 @@ INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, 
 
 CREATE TABLE `users` (
   `id` bigint UNSIGNED NOT NULL,
+  `usuario` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `apellido_paterno` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `apellido_materno` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `is_activo` tinyint(1) NOT NULL DEFAULT '1',
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_activo` tinyint(1) NOT NULL DEFAULT '1',
+  `foto` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `firma` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+
 --
--- Volcado de datos para la tabla `users`
+-- Estructura de tabla para la tabla `viviendas`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `is_activo`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Administrador', 'admin@example.com', NULL, 1, '$2y$12$s1whsLRn2pQ2vQ0Q.WidR.7.lsfNE322AO6mq02wV1jUqy6gneit2', NULL, '2026-07-14 04:20:51', '2026-07-14 04:20:51');
+CREATE TABLE `viviendas` (
+  `id` bigint UNSIGNED NOT NULL,
+  `fraccionamiento` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `asentamiento_id` bigint UNSIGNED DEFAULT NULL,
+  `tipo_vivienda_id` bigint UNSIGNED DEFAULT NULL,
+  `precio_lista` decimal(12,2) NOT NULL,
+  `recamaras` int NOT NULL DEFAULT '0',
+  `direccion` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `llaves` tinyint(1) NOT NULL DEFAULT '0',
+  `estatus_vivienda` enum('Disponible','Apartada','Vendida','Rentada','Mantenimiento','Suspendida') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Disponible',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `vivienda_contactos`
+--
+
+CREATE TABLE `vivienda_contactos` (
+  `id` bigint UNSIGNED NOT NULL,
+  `vivienda_id` bigint UNSIGNED NOT NULL,
+  `nombre` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `relacion` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `telefono` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `correo` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `notes` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `vivienda_documentos`
+--
+
+CREATE TABLE `vivienda_documentos` (
+  `id` bigint UNSIGNED NOT NULL,
+  `vivienda_id` bigint UNSIGNED NOT NULL,
+  `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nombre_original` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tipo_documento` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `peso_bytes` int DEFAULT NULL,
+  `verificado` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `vivienda_fotos`
+--
+
+CREATE TABLE `vivienda_fotos` (
+  `id` bigint UNSIGNED NOT NULL,
+  `vivienda_id` bigint UNSIGNED NOT NULL,
+  `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nombre_original` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `orden` int NOT NULL DEFAULT '0',
+  `es_principal` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `amenidades`
+--
+ALTER TABLE `amenidades`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `amenidad_vivienda`
+--
+ALTER TABLE `amenidad_vivienda`
+  ADD PRIMARY KEY (`amenidad_id`,`vivienda_id`),
+  ADD KEY `amenidad_vivienda_vivienda_id_foreign` (`vivienda_id`);
+
+--
+-- Indices de la tabla `asentamientos`
+--
+ALTER TABLE `asentamientos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `asentamientos_cp_index` (`codigo_postal`);
 
 --
 -- Indices de la tabla `cache`
@@ -281,6 +429,13 @@ ALTER TABLE `cache`
 ALTER TABLE `cache_locks`
   ADD PRIMARY KEY (`key`),
   ADD KEY `cache_locks_expiration_index` (`expiration`);
+
+--
+-- Indices de la tabla `credito_vivienda`
+--
+ALTER TABLE `credito_vivienda`
+  ADD PRIMARY KEY (`tipo_credito_id`,`vivienda_id`),
+  ADD KEY `credito_vivienda_vivienda_id_foreign` (`vivienda_id`);
 
 --
 -- Indices de la tabla `failed_jobs`
@@ -352,15 +507,71 @@ ALTER TABLE `sessions`
   ADD KEY `sessions_last_activity_index` (`last_activity`);
 
 --
+-- Indices de la tabla `tipos_credito`
+--
+ALTER TABLE `tipos_credito`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `tipos_vivienda`
+--
+ALTER TABLE `tipos_vivienda`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `users_usuario_unique` (`usuario`),
   ADD UNIQUE KEY `users_email_unique` (`email`);
+
+--
+-- Indices de la tabla `viviendas`
+--
+ALTER TABLE `viviendas`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `viviendas_asentamiento_id_foreign` (`asentamiento_id`),
+  ADD KEY `viviendas_tipo_vivienda_id_foreign` (`tipo_vivienda_id`),
+  ADD KEY `viviendas_estatus_index` (`estatus_vivienda`),
+  ADD KEY `viviendas_fraccionamiento_index` (`fraccionamiento`);
+
+--
+-- Indices de la tabla `vivienda_contactos`
+--
+ALTER TABLE `vivienda_contactos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `contactos_vivienda_id_index` (`vivienda_id`);
+
+--
+-- Indices de la tabla `vivienda_documentos`
+--
+ALTER TABLE `vivienda_documentos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `vivienda_documento_tipo_index` (`vivienda_id`,`tipo_documento`);
+
+--
+-- Indices de la tabla `vivienda_fotos`
+--
+ALTER TABLE `vivienda_fotos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `vivienda_fotos_vivienda_id_foreign` (`vivienda_id`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
+
+--
+-- AUTO_INCREMENT de la tabla `amenidades`
+--
+ALTER TABLE `amenidades`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `asentamientos`
+--
+ALTER TABLE `asentamientos`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `failed_jobs`
@@ -378,29 +589,79 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT de la tabla `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `perfiles`
 --
 ALTER TABLE `perfiles`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `permisos`
 --
 ALTER TABLE `permisos`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `tipos_credito`
+--
+ALTER TABLE `tipos_credito`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `tipos_vivienda`
+--
+ALTER TABLE `tipos_vivienda`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `viviendas`
+--
+ALTER TABLE `viviendas`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `vivienda_contactos`
+--
+ALTER TABLE `vivienda_contactos`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `vivienda_documentos`
+--
+ALTER TABLE `vivienda_documentos`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `vivienda_fotos`
+--
+ALTER TABLE `vivienda_fotos`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `amenidad_vivienda`
+--
+ALTER TABLE `amenidad_vivienda`
+  ADD CONSTRAINT `amenidad_vivienda_amenidad_id_foreign` FOREIGN KEY (`amenidad_id`) REFERENCES `amenidades` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `amenidad_vivienda_vivienda_id_foreign` FOREIGN KEY (`vivienda_id`) REFERENCES `viviendas` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `credito_vivienda`
+--
+ALTER TABLE `credito_vivienda`
+  ADD CONSTRAINT `credito_vivienda_tipo_credito_id_foreign` FOREIGN KEY (`tipo_credito_id`) REFERENCES `tipos_credito` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `credito_vivienda_vivienda_id_foreign` FOREIGN KEY (`vivienda_id`) REFERENCES `viviendas` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `perfil_permiso`
@@ -415,6 +676,31 @@ ALTER TABLE `perfil_permiso`
 ALTER TABLE `perfil_user`
   ADD CONSTRAINT `perfil_user_perfil_id_foreign` FOREIGN KEY (`perfil_id`) REFERENCES `perfiles` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `perfil_user_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `viviendas`
+--
+ALTER TABLE `viviendas`
+  ADD CONSTRAINT `viviendas_asentamiento_id_foreign` FOREIGN KEY (`asentamiento_id`) REFERENCES `asentamientos` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `viviendas_tipo_vivienda_id_foreign` FOREIGN KEY (`tipo_vivienda_id`) REFERENCES `tipos_vivienda` (`id`) ON DELETE SET NULL;
+
+--
+-- Filtros para la tabla `vivienda_contactos`
+--
+ALTER TABLE `vivienda_contactos`
+  ADD CONSTRAINT `vivienda_contactos_vivienda_id_foreign` FOREIGN KEY (`vivienda_id`) REFERENCES `viviendas` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `vivienda_documentos`
+--
+ALTER TABLE `vivienda_documentos`
+  ADD CONSTRAINT `vivienda_documentos_vivienda_id_foreign` FOREIGN KEY (`vivienda_id`) REFERENCES `viviendas` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `vivienda_fotos`
+--
+ALTER TABLE `vivienda_fotos`
+  ADD CONSTRAINT `vivienda_fotos_vivienda_id_foreign` FOREIGN KEY (`vivienda_id`) REFERENCES `viviendas` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

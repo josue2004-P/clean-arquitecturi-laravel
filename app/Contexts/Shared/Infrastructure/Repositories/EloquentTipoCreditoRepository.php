@@ -9,6 +9,31 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class EloquentTipoCreditoRepository implements TipoCreditoRepositoryInterface
 {
+    public function all(?string $contexto = null): array
+    {
+        $models = TipoCreditoEloquentModel::query()
+            ->when($contexto === 'cliente', function ($query) {
+                $query->where('aplica_cliente', true);
+            })
+            ->when($contexto === 'vivienda', function ($query) {
+                $query->where('aplica_vivienda', true);
+            })
+            ->orderBy('nombre', 'asc')
+            ->get();
+
+        return $models->map(function ($model) {
+            return new TipoCredito(
+                $model->id,
+                $model->nombre,
+                $model->descripcion,
+                (bool) $model->aplica_vivienda,
+                (bool) $model->aplica_cliente,
+                $model->created_at?->toDateTimeString(),
+                $model->updated_at?->toDateTimeString()
+            );
+        })->toArray();
+    }
+    
     public function create(TipoCredito $tipoCredito): void
     {
         TipoCreditoEloquentModel::create($tipoCredito->toArray());
