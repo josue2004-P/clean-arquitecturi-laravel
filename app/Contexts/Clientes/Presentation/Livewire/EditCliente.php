@@ -32,6 +32,7 @@ class EditCliente extends Component
     public ?string $regimen_casamiento = null;
 
     public array $zonas_ids = [];
+    public array $telefonos = [];
 
     public function mount(int $id, GetClienteByIdUseCase $getClienteUseCase)
     {
@@ -64,6 +65,7 @@ class EditCliente extends Component
         $this->regimen_casamiento = $cliente->getRegimenCasamiento();
 
         $this->zonas_ids = $cliente->getZonasInteres() ?? [];
+        $this->telefonos = collect($cliente->getTelefonos())->map(fn($t) =>$t->toArray())->toArray();
     }
 
     protected function rules(): array
@@ -85,9 +87,29 @@ class EditCliente extends Component
             'avaluo_solicitado' => 'required|in:Sí,No',
             'estado_civil' => 'nullable|in:Soltero,Casado,Divorciado,Viudo,Union_Libre',
             'regimen_casamiento' => 'nullable|string|max:100',
-            'zonas_ids' => 'nullable|array',
-            'zonas_ids.*' => 'integer|exists:asentamientos,id',
+
+            'zonas_ids'                 => 'nullable|array',
+            'zonas_ids.*'               => 'integer|exists:asentamientos,id',
+            'telefonos'                 => 'required|array|min:1',
+            'telefonos.*.id'            => 'nullable|integer',
+            'telefonos.*.telefono'      => 'required|string|min:8|max:20',
+            'telefonos.*.tipo_telefono' => 'required|string|max:50',
         ];
+    }
+
+    public function addTelefono(): void
+    {
+        $this->telefonos[] = [
+            'id' => null,
+            'telefono' => '',
+            'tipo_telefono' => 'Celular'
+        ];
+    }
+
+    public function removeTelefono(int $index): void
+    {
+        unset($this->telefonos[$index]);
+        $this->telefonos = array_values($this->telefonos);
     }
 
     public function update(UpdateClienteUseCase $updateClienteUseCase)
@@ -95,6 +117,7 @@ class EditCliente extends Component
         $validatedData = $this->validate();
 
         $validatedData['zonas_interes'] = $this->zonas_ids;
+        $validatedData['telefonos']     = $this->telefonos;
 
         try {
             $updateClienteUseCase->execute($this->clienteId, $validatedData);

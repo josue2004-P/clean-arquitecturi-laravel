@@ -3,6 +3,7 @@
 namespace App\Contexts\Clientes\Application\UseCases;
 
 use App\Contexts\Clientes\Domain\Entities\Cliente;
+use App\Contexts\Clientes\Domain\Entities\ClienteTelefono;
 use App\Contexts\Clientes\Domain\Repositories\ClienteRepositoryInterface;
 use DateTime;
 
@@ -14,6 +15,17 @@ class UpdateClienteUseCase
 
     public function execute(int $id, array $data): Cliente
     {
+        $telefonosDominio = [];
+        if (!empty($data['telefonos']) && is_array($data['telefonos'])) {
+            foreach ($data['telefonos'] as $tel) {
+                $telefonosDominio[] = new ClienteTelefono(
+                    id: $tel['id'] ?? null,
+                    clienteId: $id,
+                    telefono: $tel['telefono'],
+                    tipoTelefono: $tel['tipo_telefono'] ?? 'Celular'
+                );
+            }
+        }
         $cliente = new Cliente(
             id: $id,
             nombre: $data['nombre'],
@@ -32,6 +44,10 @@ class UpdateClienteUseCase
             avaluoSolicitado: $data['avaluo_solicitado'] ?? 'No',
             estadoCivil: $data['estado_civil'] ?? null,
             regimenCasamiento: $data['regimen_casamiento'] ?? null,
+
+            telefonos: $telefonosDominio,
+            referencias: [],
+            documentos: [],
             zonasInteres: $data['zonas_interes'] ?? []
         );
 

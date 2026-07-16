@@ -3,6 +3,7 @@
 namespace App\Contexts\Clientes\Infrastructure\Repositories;
 
 use App\Contexts\Clientes\Domain\Entities\Cliente;
+use App\Contexts\Clientes\Domain\Entities\ClienteTelefono;
 use App\Contexts\Clientes\Domain\Repositories\ClienteRepositoryInterface;
 use App\Contexts\Clientes\Infrastructure\LaravelModels\ClienteEloquentModel;
 use DateTime;
@@ -23,7 +24,7 @@ class EloquentClienteRepository implements ClienteRepositoryInterface
 
     public function findById(int $id): ?Cliente
     {
-        $modelo = ClienteEloquentModel::with('zonasInteres')->find($id);
+        $modelo = ClienteEloquentModel::with(['zonasInteres', 'telefonos'])->find($id);
         
         if (!$modelo) {
             return null;
@@ -32,24 +33,63 @@ class EloquentClienteRepository implements ClienteRepositoryInterface
         return $this->toEntity($modelo);
     }
 
-    public function save(Cliente $cliente): Cliente
+public function save(Cliente $cliente): Cliente
     {
-        $modelo = new ClienteEloquentModel();
-        $modelo = $this->fillModel($modelo, $cliente);
-        $modelo->save();
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($cliente) {
+            $modelo = new ClienteEloquentModel();
+            $modelo = $this->fillModel($modelo, $cliente);
+            $modelo->save();
 
-        return $this->toEntity($modelo);
+            // Altas iniciales de teléfonos
+            foreach ($cliente->getTelefonos() as $tel) {
+                $modelo->telefonos()->create([
+                    'telefono'      => $tel->getTelefono(),
+                    'tipo_telefono' => $tel->getTipoTelefono() ?? 'Celular',
+                ]);
+            }
+
+            $modelo->zonasInteres()->sync($cliente->getZonasInteres());
+
+            return $this->toEntity($modelo->load(['telefonos', 'zonasInteres']));
+        });
     }
 
     public function update(int $id, Cliente $cliente): Cliente
     {
-        $modelo = ClienteEloquentModel::findOrFail($id);
-        $modelo = $this->fillModel($modelo, $cliente);
-        $modelo->save();
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($id, $cliente) {
+            $modelo = ClienteEloquentModel::findOrFail($id);
+            $modelo = $this->fillModel($modelo, $cliente);
+            $modelo->save();
 
-        $modelo->zonasInteres()->sync($cliente->getZonasInteres());
+            $telefonosDominio = $cliente->getTelefonos();
+            
+            $telefonosArray = array_map(fn($t) => $t->toArray(), $telefonosDominio);
 
-        return $this->toEntity($modelo);
+            $telefonosValidos = array_filter($telefonosArray, function ($t) {
+                return !empty($t['telefono']);
+            });
+
+            $idsEnviados = array_filter(array_column($telefonosValidos, 'id'));
+
+            $modelo->telefonos()->whereNotIn('id', $idsEnviados)->delete();
+
+            foreach ($telefonosValidos as $datos) {
+                $payload = [
+                    'telefono'      => $datos['telefono'],
+                    'tipo_telefono' => $datos['tipo_telefono'] ?? 'Celular',
+                ];
+
+                if (!empty($datos['id'])) {
+                    $modelo->telefonos()->where('id', $datos['id'])->update($payload);
+                } else {
+                    $modelo->telefonos()->create($payload);
+                }
+            }
+
+            $modelo->zonasInteres()->sync($cliente->getZonasInteres());
+
+            return $this->toEntity($modelo->load(['telefonos', 'zonasInteres']));
+        });
     }
 
     public function delete(int $id): bool
@@ -68,6 +108,16 @@ class EloquentClienteRepository implements ClienteRepositoryInterface
      */
     private function toEntity(ClienteEloquentModel $modelo): Cliente
     {
+
+        $telefonosDominio = $modelo->telefonos->map(function ($tel) {
+            return new ClienteTelefono(
+                id: $tel->id,
+                clienteId: $tel->cliente_id,
+                telefono: $tel->telefono,
+                tipoTelefono: $tel->tipo_telefono
+            );
+        })->toArray();
+
         return new Cliente(
             id: $modelo->id,
             nombre: $modelo->nombre,
@@ -86,7 +136,7 @@ class EloquentClienteRepository implements ClienteRepositoryInterface
             avaluoSolicitado: $modelo->avaluo_solicitado,
             estadoCivil: $modelo->estado_civil,
             regimenCasamiento: $modelo->regimen_casamiento,
-            telefonos: [], 
+            telefonos: $telefonosDominio,
             referencias: [],
             documentos: [],
             zonasInteres: $modelo->zonasInteres->pluck('id')->toArray()
