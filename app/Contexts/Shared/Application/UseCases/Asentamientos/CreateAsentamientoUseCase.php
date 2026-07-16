@@ -11,6 +11,16 @@ class CreateAsentamientoUseCase
 
     public function execute(array $data): void
     {
+        $existe = $this->repository->findDuplicate(
+            $data['codigo_postal'],
+            $data['nombre_asentamiento'],
+            $data['tipo_asentamiento']
+        );
+
+        if ($existe) {
+            return; 
+        }
+
         $asentamiento = new Asentamiento(
             null,
             $data['codigo_postal'],

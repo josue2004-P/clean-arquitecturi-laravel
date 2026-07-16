@@ -48,20 +48,22 @@
 
             Livewire.on('swal-confirm', (data) => {
                 const isDark = document.documentElement.classList.contains('dark');
+                const config = data[0];
+
                 Swal.fire({
-                    title: data[0].title,
-                    text: data[0].text,
-                    icon: data[0].icon,
+                    title: config.title,
+                    text: config.text,
+                    icon: config.icon,
                     background: isDark ? '#1f2937' : '#ffffff',
                     color: isDark ? '#f3f4f6' : '#1f2937',
                     showCancelButton: true,
-                    confirmButtonText: 'Sí, eliminar',
-                    cancelButtonText: 'Cancelar',
-                    confirmButtonColor: '#d33',
+                    confirmButtonText: config.confirmButtonText || 'Confirmar',
+                    cancelButtonText: config.cancelButtonText || 'Cancelar',
+                    confirmButtonColor: config.confirmButtonColor || '#4f46e5',
                     customClass: { container: 'z-[99999]' }
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        Livewire.dispatch(data[0].function, { id: data[0].id });
+                        Livewire.dispatch(config.function, { id: config.id });
                     }
                 });
             });

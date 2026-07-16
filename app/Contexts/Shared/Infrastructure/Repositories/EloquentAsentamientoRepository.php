@@ -26,6 +26,28 @@ class EloquentAsentamientoRepository implements AsentamientoRepositoryInterface
             );
         })->toArray();
     }
+
+    public function findDuplicate(string $codigoPostal, string $nombreAsentamiento, string $tipoAsentamiento): ?Asentamiento
+    {
+        $model = AsentamientoEloquentModel::where('codigo_postal', $codigoPostal)
+            ->where('nombre_asentamiento', $nombreAsentamiento)
+            ->where('tipo_asentamiento', $tipoAsentamiento)
+            ->first();
+
+        if (!$model) {
+            return null;
+        }
+
+        return new Asentamiento(
+            $model->id,
+            $model->codigo_postal,
+            $model->estado,
+            $model->municipio,
+            $model->tipo_asentamiento,
+            $model->nombre_asentamiento,
+            $model->ciudad
+        );
+    }
     
     public function findByCodigoPostal(string $codigoPostal): array
     {

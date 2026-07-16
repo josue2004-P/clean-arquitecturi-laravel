@@ -15,7 +15,6 @@
             
             <div class="flex flex-col gap-5 sm:flex-row sm:items-center flex-grow">
                 <div>
-                    {{-- Texto más distinguible con gray-900 en claro y white puro en oscuro --}}
                     <h3 class="text-2xl font-black tracking-tight text-gray-900 dark:text-white transition-colors">
                         {{ $title }}
                     </h3>
@@ -28,7 +27,6 @@
                         class="h-[46px] rounded-2xl pl-12 pr-10 text-gray-800 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500" 
                     />
 
-                    {{-- Icono de lupa con mejor transición de foco --}}
                     <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-450 group-focus-within:text-indigo-600 dark:text-gray-500 dark:group-focus-within:text-indigo-400 transition-colors pointer-events-none">
                         <i class="fa-solid fa-magnifying-glass text-base"></i>
                     </div>
@@ -42,7 +40,6 @@
 
             <div class="flex flex-wrap items-center gap-3">
                 
-                {{-- Botones de Exportar --}}
                 @if($exportPdf || $exportExcel)
                 <div class="flex items-center gap-1 rounded-2xl bg-gray-100/80 p-1.5 dark:bg-white/[0.03] border border-gray-200 dark:border-gray-800 transition-colors">
                     @if($exportPdf)
@@ -60,7 +57,6 @@
                 </div>
                 @endif
 
-                {{-- Selector de Filas --}}
                 @if($perPage !== null)
                 <div class="relative">
                     <select 
@@ -77,7 +73,6 @@
                 </div>
                 @endif
 
-                {{-- Botón Filtros --}}
                 @if(isset($filters) && $filters->isNotEmpty())
                 <button 
                     @click="$dispatch('toggle-filtros')" 
@@ -88,7 +83,11 @@
                 </button>
                 @endif
 
-                {{-- Botón Nuevo Registro --}}
+                @if(isset($actions))
+                    <div class="flex items-center gap-2">
+                        {{ $actions }}
+                    </div>
+                @endif
                 @if($createRoute)
                     <x-shared::form.button-primary 
                         tag="a" 
@@ -157,7 +156,9 @@
 
     {{-- ÁREA DE TABLA --}}
     <div class="relative min-h-[200px]">
-        <div wire:loading.delay.longest class="absolute inset-0 z-20 flex items-center justify-center bg-white/60 backdrop-blur-[2px] dark:bg-gray-900/60 transition-all">
+        <div wire:loading.delay.longest 
+             wire:target="search, perPage, deleteAsentamiento"
+             class="absolute inset-0 z-20 flex items-center justify-center bg-white/60 backdrop-blur-[2px] dark:bg-gray-900/60 transition-all">
             <div class="flex flex-col items-center">
                 <div class="h-10 w-10 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent shadow-lg shadow-indigo-500/20 dark:border-indigo-400"></div>
                 <span class="mt-3 text-xs font-bold uppercase tracking-widest text-indigo-600 dark:text-indigo-400 animate-pulse">Sincronizando...</span>
